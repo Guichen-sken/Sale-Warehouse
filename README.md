@@ -49,6 +49,7 @@
 如果你对某个在售项目感兴趣，或者有定制化开发的需求，欢迎通过 GitHub Issue 或以下方式联系我：
 
 *   **GitHub**: [@Guichen-sken](https://github.com/Guichen-sken)
+*   **Email**: [18974119746@163.com](mailto:18974119746@163.com)
 
 ---
 
