@@ -1,0 +1,212 @@
+:root {
+  --bg-color: #0a0a0c;
+  --accent-color: #00ff41; /* 经典黑客绿 */
+  --text-dim: #003b00;
+  --border-color: rgba(0, 255, 65, 0.2);
+  --glitch-speed: 0.3s;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--accent-color);
+  font-family: 'Courier New', Courier, monospace;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* 噪点背景效果 */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 坐标网格背景：代替累赘的大字母 */
+body::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 100px 100px;
+  background-position: center center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.capsule-container {
+  position: relative;
+  width: 550px;
+  max-width: 85vw;
+  padding: 2.5rem;
+  /* 强化边缘差异化：极细的双色边框 */
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  outline: 4px solid rgba(0, 255, 65, 0.02);
+  background: rgba(5, 5, 7, 0.95);
+  box-shadow: 
+    0 0 40px rgba(0, 0, 0, 0.5),
+    inset 0 0 10px rgba(0, 255, 65, 0.05);
+  animation: float 8s ease-in-out infinite;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+}
+
+/* 悬浮动画 */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotateX(2deg) rotateY(-1deg); }
+  50% { transform: translateY(-20px) rotateX(-2deg) rotateY(1deg); }
+}
+
+/* 扫描线效果 */
+.scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 255, 65, 0.02) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+}
+
+.input-area {
+  min-height: 200px;
+}
+
+textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--accent-color);
+  font-family: inherit;
+  font-size: 1.2rem;
+  outline: none;
+  resize: none;
+  line-height: 1.6;
+}
+
+.footer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 5px var(--accent-color);
+  animation: blink 1s step-end infinite;
+}
+
+/* 输入时的 Glitch 效果 */
+.glitch-text {
+  animation: text-glitch 0.2s linear;
+}
+
+@keyframes text-glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); color: #ff00ff; }
+  40% { transform: translate(-2px, -2px); color: #00ffff; }
+  60% { transform: translate(2px, 2px); color: var(--accent-color); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* 封存时的碎片化动画 */
+.capsule-container.sealing {
+  animation: fragment-seal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fragment-seal {
+  0% { 
+    transform: translateY(-20px) scale(1);
+    filter: brightness(1);
+  }
+  20% {
+    transform: translateY(-20px) scale(1.05);
+    filter: brightness(2);
+    box-shadow: 0 0 50px var(--accent-color);
+  }
+  50% {
+    transform: translateY(-20px) scale(0.95) skewX(10deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-500px) scale(0) rotateY(90deg);
+    opacity: 0;
+  }
+}
+
+/* 封存成功的提示文本 */
+.seal-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  letter-spacing: 0.5rem;
+  color: var(--accent-color);
+  text-shadow: 0 0 20px var(--accent-color);
+  animation: message-fade 2s forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+@keyframes message-fade {
+  0% { opacity: 0; transform: translate(-50%, -40%); }
+  20% { opacity: 1; transform: translate(-50%, -50%); }
+  80% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+.save-btn {
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.save-btn:hover {
+  background: var(--accent-color);
+  color: var(--bg-color);
+  box-shadow: 0 0 15px var(--accent-color);
+}
