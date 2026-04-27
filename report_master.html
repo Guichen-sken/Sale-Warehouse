@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱奇艺开发者平台 - 完整自动化测试报告</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header .meta { opacity: 0.9; font-size: 1.1em; }
+        
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card .number { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
+        .stat-card .label { color: #666; font-size: 0.9em; }
+        .stat-card.success { border-top: 4px solid #52c41a; }
+        .stat-card.danger { border-top: 4px solid #ff4d4f; }
+        .stat-card.info { border-top: 4px solid #1890ff; }
+        .stat-card.warning { border-top: 4px solid #faad14; }
+        .success .number { color: #52c41a; }
+        .danger .number { color: #ff4d4f; }
+        .info .number { color: #1890ff; }
+        .warning .number { color: #faad14; }
+        
+        /* Sections */
+        .section { background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .section h2 { color: #667eea; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #f8f9fa; padding: 12px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #e8e8e8; }
+        td { padding: 12px; border-bottom: 1px solid #f0f0f0; }
+        tr:hover { background: #f8f9fa; }
+        .status-pass { color: #52c41a; font-weight: bold; }
+        .status-fail { color: #ff4d4f; font-weight: bold; }
+        .status-404 { color: #faad14; font-weight: bold; }
+        
+        /* Page List */
+        .page-item { padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea; }
+        .page-item.depth-0 { border-left-color: #52c41a; }
+        .page-item.depth-1 { border-left-color: #1890ff; }
+        .page-item.depth-2 { border-left-color: #faad14; }
+        .page-url { font-size: 0.85em; color: #666; word-break: break-all; }
+        .page-title { font-weight: 600; color: #333; margin: 5px 0; }
+        .page-meta { font-size: 0.8em; color: #999; }
+        
+        /* Screenshots */
+        .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .screenshot-item { background: #f8f9fa; padding: 10px; border-radius: 8px; }
+        .screenshot-item img { width: 100%; border-radius: 4px; cursor: pointer; transition: transform 0.3s; }
+        .screenshot-item img:hover { transform: scale(1.02); }
+        .screenshot-name { font-size: 0.85em; color: #666; margin-top: 8px; text-align: center; }
+        
+        /* Depth Chart */
+        .depth-bar { display: flex; align-items: center; margin: 8px 0; }
+        .depth-label { width: 80px; font-size: 0.9em; color: #666; }
+        .depth-progress { flex: 1; height: 25px; background: #f0f0f0; border-radius: 12px; overflow: hidden; margin: 0 10px; }
+        .depth-fill { height: 100%; border-radius: 12px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-size: 0.8em; font-weight: bold; }
+        .depth-count { width: 50px; text-align: right; font-weight: bold; color: #333; }
+        
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎬 爱奇艺开发者平台</h1>
+            <h2>完整自动化测试报告</h2>
+            <div class="meta">
+                <p>📅 执行时间: 2026-04-27 19:21:37</p>
+                <p>⏱️ 总耗时: 103.60 秒</p>
+                <p>🖥️ 模式: 真实浏览器窗口（禁止无头模式）</p>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card success">
+                <div class="label">通过测试</div>
+                <div class="number">20</div>
+            </div>
+            <div class="stat-card danger">
+                <div class="label">失败测试</div>
+                <div class="number">0</div>
+            </div>
+            <div class="stat-card info">
+                <div class="label">访问页面</div>
+                <div class="number">13</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="label">发现链接</div>
+                <div class="number">327</div>
+            </div>
+            <div class="stat-card info">
+                <div class="label">截图数量</div>
+                <div class="number">32</div>
+            </div>
+            <div class="stat-card success">
+                <div class="label">遍历深度</div>
+                <div class="number">2</div>
+            </div>
+        </div>
+        
+        <!-- API Test Results -->
+        <div class="section">
+            <h2>🔍 接口自动化测试结果</h2>
+            <table>
+                <tr><th>时间</th><th>测试项</th><th>状态</th><th>耗时</th><th>详情</th></tr>
+
+                <tr>
+                    <td>19:21:38</td>
+                    <td>正常解密流程</td>
+                    <td class="status-pass">通过</td>
+                    <td>724.26ms</td>
+                    <td>手机号: 13812345678</td>
+                </tr>
+                <tr>
+                    <td>19:21:38</td>
+                    <td>无效token处理</td>
+                    <td class="status-pass">通过</td>
+                    <td>93.07ms</td>
+                    <td>错误码: Q00301</td>
+                </tr>
+                <tr>
+                    <td>19:21:38</td>
+                    <td>空token处理</td>
+                    <td class="status-pass">通过</td>
+                    <td>78.14ms</td>
+                    <td>错误码: Q00307</td>
+                </tr>
+                <tr>
+                    <td>19:21:38</td>
+                    <td>checkDiscount参数</td>
+                    <td class="status-pass">通过</td>
+                    <td>317.84ms</td>
+                    <td>返回discount字段</td>
+                </tr>
+                <tr>
+                    <td>19:21:38</td>
+                    <td>MD5签名验证</td>
+                    <td class="status-pass">通过</td>
+                    <td>0.00ms</td>
+                    <td>签名: f80118ff523f25eda67cb799bdc9c52d</td>
+                </tr>
+                <tr>
+                    <td>19:21:38</td>
+                    <td>响应时间测试</td>
+                    <td class="status-pass">通过</td>
+                    <td>95.52ms</td>
+                    <td>95.52ms</td>
+                </tr>
+                <tr>
+                    <td>19:21:38</td>
+                    <td>响应结构完整性</td>
+                    <td class="status-pass">通过</td>
+                    <td>79.73ms</td>
+                    <td>包含必要字段</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Depth Stats -->
+        <div class="section">
+            <h2>📊 页面遍历深度统计</h2>
+
+            <div class="depth-bar">
+                <div class="depth-label">深度 0</div>
+                <div class="depth-progress">
+                    <div class="depth-fill" style="width: 50.0%; background: #52c41a;">3</div>
+                </div>
+                <div class="depth-count">3页</div>
+            </div>
+            <div class="depth-bar">
+                <div class="depth-label">深度 1</div>
+                <div class="depth-progress">
+                    <div class="depth-fill" style="width: 66.66666666666666%; background: #1890ff;">4</div>
+                </div>
+                <div class="depth-count">4页</div>
+            </div>
+            <div class="depth-bar">
+                <div class="depth-label">深度 2</div>
+                <div class="depth-progress">
+                    <div class="depth-fill" style="width: 100.0%; background: #faad14;">6</div>
+                </div>
+                <div class="depth-count">6页</div>
+            </div>
+        </div>
+        
+        <!-- Visited Pages -->
+        <div class="section">
+            <h2>🌐 访问的页面列表（全站遍历）</h2>
+
+            <div class="page-item depth-0">
+                <div class="page-url">https://www.iqiyi.com/kszt/GetStarted_Overview.html</div>
+                <div class="page-title">Get Started - Overview</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 0</span> | 
+                    <span>链接: 0个</span> | 
+                    <span>时间: 19:21:46</span>
+                </div>
+            </div>
+            <div class="page-item depth-0">
+                <div class="page-url">https://developer.vip.iqiyi.com/custom/ViewEngine/userInfoDecrypted.html</div>
+                <div class="page-title">用户信息解密接口 | 会员对外文档平台</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 0</span> | 
+                    <span>链接: 11个</span> | 
+                    <span>时间: 19:21:52</span>
+                </div>
+            </div>
+            <div class="page-item depth-1">
+                <div class="page-url">https://co.vip.iqiyi.com/</div>
+                <div class="page-title">iQIYI·VIP会员·开放平台</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 1</span> | 
+                    <span>链接: 15个</span> | 
+                    <span>时间: 19:21:57</span>
+                </div>
+            </div>
+            <div class="page-item depth-2">
+                <div class="page-url">https://www.iqiyi.com/</div>
+                <div class="page-title">爱奇艺 iQIYI-热门独播剧集在线观看</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 2</span> | 
+                    <span>链接: 155个</span> | 
+                    <span>时间: 19:22:19</span>
+                </div>
+            </div>
+            <div class="page-item depth-2">
+                <div class="page-url">https://www.iqiyi.com/co-op/service</div>
+                <div class="page-title">404 - Not Found</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 2</span> | 
+                    <span>链接: 0个</span> | 
+                    <span>时间: 19:22:23</span>
+                </div>
+            </div>
+            <div class="page-item depth-2">
+                <div class="page-url">https://www.iqiyi.com/co-op/ilm</div>
+                <div class="page-title">404 - Not Found</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 2</span> | 
+                    <span>链接: 0个</span> | 
+                    <span>时间: 19:22:27</span>
+                </div>
+            </div>
+            <div class="page-item depth-1">
+                <div class="page-url">https://www.iqiyi.com/custom/TOB/subscribeTob.html</div>
+                <div class="page-title">404 - Not Found</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 1</span> | 
+                    <span>链接: 0个</span> | 
+                    <span>时间: 19:22:31</span>
+                </div>
+            </div>
+            <div class="page-item depth-0">
+                <div class="page-url">https://developer.game.iqiyi.com/tools/api</div>
+                <div class="page-title">爱奇艺开发者管理后台</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 0</span> | 
+                    <span>链接: 8个</span> | 
+                    <span>时间: 19:22:36</span>
+                </div>
+            </div>
+            <div class="page-item depth-1">
+                <div class="page-url">https://developer.game.iqiyi.com/</div>
+                <div class="page-title">爱奇艺开发者管理后台 | 登录</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 1</span> | 
+                    <span>链接: 6个</span> | 
+                    <span>时间: 19:22:43</span>
+                </div>
+            </div>
+            <div class="page-item depth-2">
+                <div class="page-url">https://developer.game.iqiyi.com/account/index</div>
+                <div class="page-title">爱奇艺开发者管理后台 | 登录</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 2</span> | 
+                    <span>链接: 6个</span> | 
+                    <span>时间: 19:22:50</span>
+                </div>
+            </div>
+            <div class="page-item depth-2">
+                <div class="page-url">https://www.iqiyi.com/jplatform/frontend/doc/doc.html?id=8</div>
+                <div class="page-title">404 - Not Found</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 2</span> | 
+                    <span>链接: 0个</span> | 
+                    <span>时间: 19:22:53</span>
+                </div>
+            </div>
+            <div class="page-item depth-1">
+                <div class="page-url">https://developer.game.iqiyi.com/tools/mobileApi</div>
+                <div class="page-title">爱奇艺开发者管理后台 手机游戏</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 1</span> | 
+                    <span>链接: 5个</span> | 
+                    <span>时间: 19:22:58</span>
+                </div>
+            </div>
+            <div class="page-item depth-2">
+                <div class="page-url">http://www.iqiyi.com/common/aboutus.html</div>
+                <div class="page-title">公司介绍</div>
+                <div class="page-meta">
+                    <span class="status-pass">状态: 200</span> | 
+                    <span>深度: 2</span> | 
+                    <span>链接: 121个</span> | 
+                    <span>时间: 19:23:09</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Screenshots -->
+        <div class="section">
+            <h2>📸 自动化截图证据</h2>
+            <div class="screenshot-grid">
+
+                <div class="screenshot-item">
+                    <img src="screenshots/depth0_https_developer.game.iqiyi.com_tools_api.png" alt="depth0_https_developer.game.iqiyi.com_tools_api.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth0_https_developer.game.iqiyi.com_tools_api.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth0_https_developer.vip.iqiyi.com_custom_ViewEngine_us.png" alt="depth0_https_developer.vip.iqiyi.com_custom_ViewEngine_us.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth0_https_developer.vip.iqiyi.com_custom_ViewEngine_us.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth0_https_www.iqiyi.com_kszt_GetStarted_Overview.html.png" alt="depth0_https_www.iqiyi.com_kszt_GetStarted_Overview.html.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth0_https_www.iqiyi.com_kszt_GetStarted_Overview.html.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth1_https_co.vip.iqiyi.com_.png" alt="depth1_https_co.vip.iqiyi.com_.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth1_https_co.vip.iqiyi.com_.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth1_https_developer.game.iqiyi.com_.png" alt="depth1_https_developer.game.iqiyi.com_.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth1_https_developer.game.iqiyi.com_.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth1_https_developer.game.iqiyi.com_tools_mobileApi.png" alt="depth1_https_developer.game.iqiyi.com_tools_mobileApi.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth1_https_developer.game.iqiyi.com_tools_mobileApi.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth1_https_www.iqiyi.com_custom_TOB_subscribeTob.html.png" alt="depth1_https_www.iqiyi.com_custom_TOB_subscribeTob.html.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth1_https_www.iqiyi.com_custom_TOB_subscribeTob.html.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth2_http_www.iqiyi.com_common_aboutus.html.png" alt="depth2_http_www.iqiyi.com_common_aboutus.html.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth2_http_www.iqiyi.com_common_aboutus.html.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth2_https_developer.game.iqiyi.com_account_index.png" alt="depth2_https_developer.game.iqiyi.com_account_index.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth2_https_developer.game.iqiyi.com_account_index.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth2_https_www.iqiyi.com_.png" alt="depth2_https_www.iqiyi.com_.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth2_https_www.iqiyi.com_.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth2_https_www.iqiyi.com_co-op_ilm.png" alt="depth2_https_www.iqiyi.com_co-op_ilm.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth2_https_www.iqiyi.com_co-op_ilm.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth2_https_www.iqiyi.com_co-op_service.png" alt="depth2_https_www.iqiyi.com_co-op_service.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth2_https_www.iqiyi.com_co-op_service.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/depth2_https_www.iqiyi.com_jplatform_frontend_doc_doc.htm.png" alt="depth2_https_www.iqiyi.com_jplatform_frontend_doc_doc.htm.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">depth2_https_www.iqiyi.com_jplatform_frontend_doc_doc.htm.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/final_state.png" alt="final_state.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">final_state.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_01_开发者平台首页.png" alt="page_01_开发者平台首页.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_01_开发者平台首页.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_02_Getting_Started.png" alt="page_02_Getting_Started.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_02_Getting_Started.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_03_API参考索引.png" alt="page_03_API参考索引.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_03_API参考索引.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_04_Video_API.png" alt="page_04_Video_API.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_04_Video_API.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_05_Channel_API.png" alt="page_05_Channel_API.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_05_Channel_API.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_06_用户信息解密接口.png" alt="page_06_用户信息解密接口.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_06_用户信息解密接口.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_07_合作方领取权益接口.png" alt="page_07_合作方领取权益接口.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_07_合作方领取权益接口.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/page_08_游戏平台调试工具.png" alt="page_08_游戏平台调试工具.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">page_08_游戏平台调试工具.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/step1_打开开发者平台首页.png" alt="step1_打开开发者平台首页.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">step1_打开开发者平台首页.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/step2_scroll.png" alt="step2_scroll.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">step2_scroll.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/step3_查看用户信息解密接口文档.png" alt="step3_查看用户信息解密接口文档.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">step3_查看用户信息解密接口文档.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/step4_elements.png" alt="step4_elements.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">step4_elements.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/step5_游戏平台接口调试工具.png" alt="step5_游戏平台接口调试工具.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">step5_游戏平台接口调试工具.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/step6_验证网络连通性.png" alt="step6_验证网络连通性.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">step6_验证网络连通性.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/web_step1_developer.png" alt="web_step1_developer.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">web_step1_developer.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/web_step2_scroll.png" alt="web_step2_scroll.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">web_step2_scroll.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/web_step3_api_docs.png" alt="web_step3_api_docs.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">web_step3_api_docs.png</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="screenshots/web_step4_game_tool.png" alt="web_step4_game_tool.png" onclick="window.open(this.src)">
+                    <div class="screenshot-name">web_step4_game_tool.png</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Video -->
+        <div class="section">
+            <h2>🎥 录屏记录</h2>
+            <p>录屏文件: <code>D:\cursoc代码库\api\videos\0da1ed468a6042a8cf972d028801649c.webm</code></p>
+            <video controls style="width:100%;max-width:800px;"><source src="D:\cursoc代码库\api\videos\0da1ed468a6042a8cf972d028801649c.webm" type="video/webm"></video>
+        </div>
+        
+        <div class="footer">
+            <p>爱奇艺开发者平台完整自动化测试 | 生成时间: 2026-04-27 19:23:21</p>
+        </div>
+    </div>
+</body>
+</html>
