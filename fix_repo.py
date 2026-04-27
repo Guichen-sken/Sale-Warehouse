@@ -1,6 +1,5 @@
 import subprocess
 import os
-import shutil
 
 def run(cmd, cwd=r"D:\cursoc代码库\api"):
     print(f">>> {cmd}")
@@ -10,31 +9,34 @@ def run(cmd, cwd=r"D:\cursoc代码库\api"):
         print(f"ERR: {result.stderr}")
     return result
 
-# 从main分支获取原有文件
-print("=== 从main分支获取 README.md ===")
-result = run("git show main:README.md")
-if result.returncode == 0:
-    with open("README.md", "w", encoding="utf-8") as f:
-        f.write(result.stdout)
-    print("✅ README.md 已恢复")
+# 获取远程所有分支的commit
+print("=== 获取远程分支信息 ===")
+run("git fetch origin")
 
-print("\n=== 从main分支获取 typo-capsule ===")
-# 先检查main分支是否有这个文件夹
-result = run("git ls-tree -r main --name-only | findstr typo-capsule")
-if result.stdout.strip():
-    # 恢复整个文件夹
-    run("git checkout main -- typo-capsule")
-    print("✅ typo-capsule/ 已恢复")
-else:
-    print("❌ main分支没有typo-capsule文件夹")
+print("\n=== 检查所有远程分支 ===")
+run("git branch -r")
 
-print("\n=== 检查恢复后的文件 ===")
+print("\n=== 尝试从其他分支恢复文件 ===")
+# 尝试从 sold/for-sale/main 分支获取
+branches = ["origin/main", "origin/sold", "origin/for-sale"]
+for branch in branches:
+    print(f"\n--- 检查 {branch} ---")
+    result = run(f"git ls-tree -r {branch} --name-only 2>nul | findstr -i \"readme typo\" ")
+    if result.stdout.strip():
+        print(f"✅ 在 {branch} 找到文件！")
+        # 恢复README.md
+        run(f"git show {branch}:README.md > README.md 2>nul")
+        # 恢复typo-capsule
+        run(f"git checkout {branch} -- typo-capsule 2>nul")
+        break
+
+print("\n=== 检查本地文件 ===")
 for item in os.listdir("."):
     print(f"  {item}")
 
-print("\n=== 提交恢复的文件 ===")
+print("\n=== 提交并推送 ===")
 run("git add -A")
-run('git commit -m "fix: 恢复README.md和typo-capsule文件夹"')
+run('git commit -m "fix: 从其他分支恢复README.md和typo-capsule"')
 run("git push origin master:creative")
 
 print("\n✅ 完成！")
